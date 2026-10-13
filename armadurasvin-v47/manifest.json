@@ -1,0 +1,14 @@
+{
+  "Group": "com.playergames",
+  "Name": "ArmadurasVin",
+  "Version": "1.0.0",
+  "Description": "RPG progression system: levels, XP, attribute points and persistent player stats",
+  "Authors": [
+    {
+      "Name": "Player Games"
+    }
+  ],
+  "Main": "com.playergames.hytalemod.ArmadurasVinPlugin",
+  "IncludesAssetPack": true,
+  "ServerVersion": "*"
+}

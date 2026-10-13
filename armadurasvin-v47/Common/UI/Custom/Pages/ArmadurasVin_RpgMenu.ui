@@ -1,0 +1,1021 @@
+$C = "../Common.ui";
+
+// ArmadurasVin RPG menu v47 - layout de tamano fijo + panel de Prestigio.
+// - Cada elemento declara Width y Height; sin FlexWeight ni margenes que dependan del contenido.
+// - Los pares boton / *Off miden exactamente lo mismo: alternar Visible no mueve nada.
+// - HorizontalAlignment / VerticalAlignment solo con Start, Center o End (nunca Right).
+// - Se conservan todos los ids que el Java lee o actualiza.
+//
+// Ids de Prestigio (el Java actual NO los rellena todavia; muestran "--" hasta que RpgMenuPage los envie):
+//   #PrestigeValue            -> numero de Prestigio        (PlayerRpgData.getPrestige(), int)
+//   #PrestigeNextValue        -> nivel requerido siguiente  (PlayerRpgData.prestigeRequirement(), int)
+//   #PrestigeHealthBonus, #PrestigeManaBonus, #PrestigeDamageBonus,
+//   #PrestigeDefenseBonus, #PrestigeStaminaBonus, #PrestigeSpeedBonus -> bonos permanentes (float)
+
+$C.@PageOverlay {
+  $C.@DecoratedContainer {
+    Anchor: (Width: 940, Height: 740);
+
+    #Title {
+      Group {
+        $C.@Title {
+          @Text = "ArmadurasVin - Menu RPG";
+        }
+      }
+    }
+
+    #Content {
+      LayoutMode: Top;
+      Padding: (Left: 16, Right: 12, Top: 8, Bottom: 10);
+
+      Group #Columns {
+        LayoutMode: Left;
+        Anchor: (Width: 872, Height: 580);
+
+        // ================= Panel izquierdo: progreso, prestigio y clase =================
+        Group #LeftPanel {
+          LayoutMode: Top;
+          Anchor: (Width: 300, Height: 580);
+          Background: #0f0d24(0.95);
+          Padding: (Left: 14, Right: 14, Top: 12, Bottom: 12);
+
+          Label #SummaryHeading {
+            Text: "Personaje";
+            Style: (FontSize: 14, TextColor: #cdbfff, RenderBold: true, RenderUppercase: true, VerticalAlignment: Center);
+            Anchor: (Width: 272, Height: 26);
+          }
+          Group { Anchor: (Width: 272, Height: 1); Background: #4b3f94(0.9); }
+          Group { Anchor: (Width: 10, Height: 8); }
+
+          Group #LevelCard {
+            LayoutMode: Left;
+            Anchor: (Width: 272, Height: 30);
+            Background: #1b1842(0.97);
+
+            Group { Anchor: (Width: 4, Height: 30); Background: #7a68e0; }
+            Group { Anchor: (Width: 8, Height: 30); }
+            Label #LevelLabel {
+              Text: "Nivel";
+              Style: (FontSize: 12, TextColor: #e8e4ff, RenderBold: true, VerticalAlignment: Center);
+              Anchor: (Width: 120, Height: 30);
+            }
+            Label #LevelValue {
+              Text: "1";
+              Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: End, VerticalAlignment: Center);
+              Anchor: (Width: 128, Height: 30);
+            }
+            Group { Anchor: (Width: 12, Height: 30); }
+          }
+          Group { Anchor: (Width: 10, Height: 3); }
+          Group #PrestigeCard {
+            LayoutMode: Left;
+            Anchor: (Width: 272, Height: 30);
+            Background: #1b1842(0.97);
+
+            Group { Anchor: (Width: 4, Height: 30); Background: #f5c26b; }
+            Group { Anchor: (Width: 8, Height: 30); }
+            Label #PrestigeLabel {
+              Text: "Prestigio";
+              Style: (FontSize: 12, TextColor: #f5c26b, RenderBold: true, VerticalAlignment: Center);
+              Anchor: (Width: 120, Height: 30);
+            }
+            Label #PrestigeValue {
+              Text: "--";
+              Style: (FontSize: 15, TextColor: #f5c26b, RenderBold: true, HorizontalAlignment: End, VerticalAlignment: Center);
+              Anchor: (Width: 128, Height: 30);
+            }
+            Group { Anchor: (Width: 12, Height: 30); }
+          }
+          Group { Anchor: (Width: 10, Height: 3); }
+          Group #PrestigeNextCard {
+            LayoutMode: Left;
+            Anchor: (Width: 272, Height: 30);
+            Background: #1b1842(0.97);
+
+            Group { Anchor: (Width: 4, Height: 30); Background: #f5c26b; }
+            Group { Anchor: (Width: 8, Height: 30); }
+            Label #PrestigeNextLabel {
+              Text: "Proximo prestigio";
+              Style: (FontSize: 12, TextColor: #f5c26b, RenderBold: true, VerticalAlignment: Center);
+              Anchor: (Width: 120, Height: 30);
+            }
+            Label #PrestigeNextValue {
+              Text: "--";
+              Style: (FontSize: 15, TextColor: #f5c26b, RenderBold: true, HorizontalAlignment: End, VerticalAlignment: Center);
+              Anchor: (Width: 128, Height: 30);
+            }
+            Group { Anchor: (Width: 12, Height: 30); }
+          }
+          Group { Anchor: (Width: 10, Height: 3); }
+          Group #XpCard {
+            LayoutMode: Left;
+            Anchor: (Width: 272, Height: 30);
+            Background: #1b1842(0.97);
+
+            Group { Anchor: (Width: 4, Height: 30); Background: #7a68e0; }
+            Group { Anchor: (Width: 8, Height: 30); }
+            Label #XpLabel {
+              Text: "XP";
+              Style: (FontSize: 12, TextColor: #e8e4ff, RenderBold: true, VerticalAlignment: Center);
+              Anchor: (Width: 120, Height: 30);
+            }
+            Label #XpValue {
+              Text: "0 / 100";
+              Style: (FontSize: 15, TextColor: #ffffff, RenderBold: true, HorizontalAlignment: End, VerticalAlignment: Center);
+              Anchor: (Width: 128, Height: 30);
+            }
+            Group { Anchor: (Width: 12, Height: 30); }
+          }
+          Group { Anchor: (Width: 10, Height: 3); }
+          Group #PointsCard {
+            LayoutMode: Left;
+            Anchor: (Width: 272, Height: 40);
+            Background: #1b1842(0.97);
+
+            Group { Anchor: (Width: 4, Height: 40); Background: #7a68e0; }
+            Group { Anchor: (Width: 8, Height: 40); }
+            Label #PointsLabel {
+              Text: "Puntos disponibles";
+              Style: (FontSize: 12, TextColor: #ffd166, RenderBold: true, VerticalAlignment: Center);
+              Anchor: (Width: 120, Height: 40);
+            }
+            Label #PointsValue {
+              Text: "0";
+              Style: (FontSize: 20, TextColor: #ffd166, RenderBold: true, HorizontalAlignment: End, VerticalAlignment: Center);
+              Anchor: (Width: 128, Height: 40);
+            }
+            Group { Anchor: (Width: 12, Height: 40); }
+          }
+          Group { Anchor: (Width: 10, Height: 3); }
+          Label #PointsHint {
+            Text: "";
+            Style: (FontSize: 11, TextColor: #b9b0dd, Wrap: true);
+            Anchor: (Width: 272, Height: 34);
+          }
+
+          Label #PendingLabel {
+            Text: "";
+            Style: (FontSize: 11, TextColor: #ffd166, Wrap: true);
+            Anchor: (Width: 272, Height: 44);
+          }
+
+          Group { Anchor: (Width: 10, Height: 6); }
+
+          Label #ClassHeading {
+            Text: "Clase";
+            Style: (FontSize: 14, TextColor: #cdbfff, RenderBold: true, RenderUppercase: true, VerticalAlignment: Center);
+            Anchor: (Width: 272, Height: 26);
+          }
+          Group { Anchor: (Width: 272, Height: 1); Background: #4b3f94(0.9); }
+          Group { Anchor: (Width: 10, Height: 8); }
+          Label #ClassCurrent {
+            Text: "";
+            Style: (FontSize: 12, TextColor: #ffffff, RenderBold: true, VerticalAlignment: Center);
+            Anchor: (Width: 272, Height: 22);
+          }
+
+          Label #ClassChooseHint {
+            Text: "";
+            Style: (FontSize: 11, TextColor: #b9b0dd, Wrap: true);
+            Anchor: (Width: 272, Height: 34);
+          }
+
+          Group { Anchor: (Width: 10, Height: 4); }
+
+          Group #ClassRowA {
+            LayoutMode: Left;
+            Anchor: (Width: 272, Height: 40);
+
+              TextButton #ClassBtn0 {
+                Anchor: (Width: 132, Height: 40);
+                Text: "Guerrero";
+                Style: $C.@DefaultTextButtonStyle;
+              }
+              Group { Anchor: (Width: 8, Height: 40); }
+              TextButton #ClassBtn1 {
+                Anchor: (Width: 132, Height: 40);
+                Text: "Mago";
+                Style: $C.@DefaultTextButtonStyle;
+              }
+          }
+
+          Group { Anchor: (Width: 10, Height: 6); }
+
+          Group #ClassRowB {
+            LayoutMode: Left;
+            Anchor: (Width: 272, Height: 40);
+
+              TextButton #ClassBtn2 {
+                Anchor: (Width: 132, Height: 40);
+                Text: "Arquero";
+                Style: $C.@DefaultTextButtonStyle;
+              }
+              Group { Anchor: (Width: 8, Height: 40); }
+              TextButton #ClassBtn3 {
+                Anchor: (Width: 132, Height: 40);
+                Text: "Asesino";
+                Style: $C.@DefaultTextButtonStyle;
+              }
+          }
+
+          Group { Anchor: (Width: 10, Height: 6); }
+
+          Label #ClassStats {
+            Text: "";
+            Style: (FontSize: 11, TextColor: #b9b0dd, Wrap: true);
+            Anchor: (Width: 272, Height: 66);
+          }
+        }
+
+        Group #ColumnSpacer {
+          Anchor: (Width: 12, Height: 580);
+        }
+
+        // ================= Columna derecha: atributos + prestigio =================
+        Group #RightColumn {
+          LayoutMode: Top;
+          Anchor: (Width: 560, Height: 580);
+
+          Group #RightPanel {
+            LayoutMode: Top;
+            Anchor: (Width: 560, Height: 355);
+            Background: #0f0d24(0.95);
+            Padding: (Left: 14, Right: 14, Top: 12, Bottom: 12);
+
+          Label #StatsHeading {
+            Text: "Atributos";
+            Style: (FontSize: 14, TextColor: #cdbfff, RenderBold: true, RenderUppercase: true, VerticalAlignment: Center);
+            Anchor: (Width: 532, Height: 26);
+          }
+          Group { Anchor: (Width: 532, Height: 1); Background: #4b3f94(0.9); }
+          Group { Anchor: (Width: 10, Height: 8); }
+          Group {
+            LayoutMode: Left;
+            Anchor: (Width: 532, Height: 92);
+
+          Group #HealthCard {
+            LayoutMode: Left;
+            Anchor: (Width: 259, Height: 92);
+            Background: #1b1842(0.97);
+
+            Group #HealthAccent {
+              Anchor: (Width: 5, Height: 92);
+              Background: #ff6b6b;
+            }
+
+            Group #HealthBody {
+              LayoutMode: Left;
+              Anchor: (Width: 254, Height: 92);
+
+              Group #HealthText {
+                LayoutMode: Top;
+                Anchor: (Width: 128, Height: 92);
+                Padding: (Left: 12, Right: 4, Top: 6, Bottom: 4);
+
+                Label #HealthLabel {
+                  Text: "Health";
+                  Style: (FontSize: 13, TextColor: #ff6b6b, RenderBold: true, RenderUppercase: true, VerticalAlignment: Center);
+                  Anchor: (Width: 112, Height: 22);
+                }
+                Label #HealthValue {
+                  Text: "0";
+                  Style: (FontSize: 22, TextColor: #ffffff, RenderBold: true, VerticalAlignment: Center);
+                  Anchor: (Width: 112, Height: 34);
+                }
+                Label #HealthDelta {
+                  Text: "";
+                  Style: (FontSize: 12, TextColor: #ffd166, RenderBold: true, VerticalAlignment: Center);
+                  Anchor: (Width: 112, Height: 20);
+                }
+              }
+
+              Group #HealthControls {
+                LayoutMode: Top;
+                Anchor: (Width: 126, Height: 92);
+
+                Group { Anchor: (Width: 126, Height: 26); }
+
+                Group #HealthButtons {
+                  LayoutMode: Left;
+                  Anchor: (Width: 126, Height: 40);
+
+                  TextButton #HealthMinusBtn {
+                    Anchor: (Width: 56, Height: 40);
+                    Text: "-";
+                    Style: $C.@DefaultTextButtonStyle;
+                  }
+                  Group #HealthMinusOff {
+                    Visible: false;
+                    Anchor: (Width: 56, Height: 40);
+                    Background: #24214d(0.9);
+                    Label #HealthMinusOffText {
+                      Text: "-";
+                      Style: (FontSize: 16, TextColor: #5f5a80, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+                      Anchor: (Width: 56, Height: 40);
+                    }
+                  }
+                  Group #HealthButtonGap {
+                    Anchor: (Width: 8, Height: 40);
+                  }
+                  TextButton #HealthBtn {
+                    Anchor: (Width: 56, Height: 40);
+                    Text: "+";
+                    Style: $C.@DefaultTextButtonStyle;
+                  }
+                  Group #HealthPlusOff {
+                    Visible: false;
+                    Anchor: (Width: 56, Height: 40);
+                    Background: #24214d(0.9);
+                    Label #HealthPlusOffText {
+                      Text: "+";
+                      Style: (FontSize: 16, TextColor: #5f5a80, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+                      Anchor: (Width: 56, Height: 40);
+                    }
+                  }
+                }
+              }
+            }
+          }
+            Group { Anchor: (Width: 14, Height: 92); }
+
+          Group #ManaCard {
+            LayoutMode: Left;
+            Anchor: (Width: 259, Height: 92);
+            Background: #1b1842(0.97);
+
+            Group #ManaAccent {
+              Anchor: (Width: 5, Height: 92);
+              Background: #5aa9ff;
+            }
+
+            Group #ManaBody {
+              LayoutMode: Left;
+              Anchor: (Width: 254, Height: 92);
+
+              Group #ManaText {
+                LayoutMode: Top;
+                Anchor: (Width: 128, Height: 92);
+                Padding: (Left: 12, Right: 4, Top: 6, Bottom: 4);
+
+                Label #ManaLabel {
+                  Text: "Mana";
+                  Style: (FontSize: 13, TextColor: #5aa9ff, RenderBold: true, RenderUppercase: true, VerticalAlignment: Center);
+                  Anchor: (Width: 112, Height: 22);
+                }
+                Label #ManaValue {
+                  Text: "0";
+                  Style: (FontSize: 22, TextColor: #ffffff, RenderBold: true, VerticalAlignment: Center);
+                  Anchor: (Width: 112, Height: 34);
+                }
+                Label #ManaDelta {
+                  Text: "";
+                  Style: (FontSize: 12, TextColor: #ffd166, RenderBold: true, VerticalAlignment: Center);
+                  Anchor: (Width: 112, Height: 20);
+                }
+              }
+
+              Group #ManaControls {
+                LayoutMode: Top;
+                Anchor: (Width: 126, Height: 92);
+
+                Group { Anchor: (Width: 126, Height: 26); }
+
+                Group #ManaButtons {
+                  LayoutMode: Left;
+                  Anchor: (Width: 126, Height: 40);
+
+                  TextButton #ManaMinusBtn {
+                    Anchor: (Width: 56, Height: 40);
+                    Text: "-";
+                    Style: $C.@DefaultTextButtonStyle;
+                  }
+                  Group #ManaMinusOff {
+                    Visible: false;
+                    Anchor: (Width: 56, Height: 40);
+                    Background: #24214d(0.9);
+                    Label #ManaMinusOffText {
+                      Text: "-";
+                      Style: (FontSize: 16, TextColor: #5f5a80, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+                      Anchor: (Width: 56, Height: 40);
+                    }
+                  }
+                  Group #ManaButtonGap {
+                    Anchor: (Width: 8, Height: 40);
+                  }
+                  TextButton #ManaBtn {
+                    Anchor: (Width: 56, Height: 40);
+                    Text: "+";
+                    Style: $C.@DefaultTextButtonStyle;
+                  }
+                  Group #ManaPlusOff {
+                    Visible: false;
+                    Anchor: (Width: 56, Height: 40);
+                    Background: #24214d(0.9);
+                    Label #ManaPlusOffText {
+                      Text: "+";
+                      Style: (FontSize: 16, TextColor: #5f5a80, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+                      Anchor: (Width: 56, Height: 40);
+                    }
+                  }
+                }
+              }
+            }
+          }
+          }
+          Group { Anchor: (Width: 10, Height: 8); }
+          Group {
+            LayoutMode: Left;
+            Anchor: (Width: 532, Height: 92);
+
+          Group #DamageCard {
+            LayoutMode: Left;
+            Anchor: (Width: 259, Height: 92);
+            Background: #1b1842(0.97);
+
+            Group #DamageAccent {
+              Anchor: (Width: 5, Height: 92);
+              Background: #ffb454;
+            }
+
+            Group #DamageBody {
+              LayoutMode: Left;
+              Anchor: (Width: 254, Height: 92);
+
+              Group #DamageText {
+                LayoutMode: Top;
+                Anchor: (Width: 128, Height: 92);
+                Padding: (Left: 12, Right: 4, Top: 6, Bottom: 4);
+
+                Label #DamageLabel {
+                  Text: "Damage";
+                  Style: (FontSize: 13, TextColor: #ffb454, RenderBold: true, RenderUppercase: true, VerticalAlignment: Center);
+                  Anchor: (Width: 112, Height: 22);
+                }
+                Label #DamageValue {
+                  Text: "0";
+                  Style: (FontSize: 22, TextColor: #ffffff, RenderBold: true, VerticalAlignment: Center);
+                  Anchor: (Width: 112, Height: 34);
+                }
+                Label #DamageDelta {
+                  Text: "";
+                  Style: (FontSize: 12, TextColor: #ffd166, RenderBold: true, VerticalAlignment: Center);
+                  Anchor: (Width: 112, Height: 20);
+                }
+              }
+
+              Group #DamageControls {
+                LayoutMode: Top;
+                Anchor: (Width: 126, Height: 92);
+
+                Group { Anchor: (Width: 126, Height: 26); }
+
+                Group #DamageButtons {
+                  LayoutMode: Left;
+                  Anchor: (Width: 126, Height: 40);
+
+                  TextButton #DamageMinusBtn {
+                    Anchor: (Width: 56, Height: 40);
+                    Text: "-";
+                    Style: $C.@DefaultTextButtonStyle;
+                  }
+                  Group #DamageMinusOff {
+                    Visible: false;
+                    Anchor: (Width: 56, Height: 40);
+                    Background: #24214d(0.9);
+                    Label #DamageMinusOffText {
+                      Text: "-";
+                      Style: (FontSize: 16, TextColor: #5f5a80, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+                      Anchor: (Width: 56, Height: 40);
+                    }
+                  }
+                  Group #DamageButtonGap {
+                    Anchor: (Width: 8, Height: 40);
+                  }
+                  TextButton #DamageBtn {
+                    Anchor: (Width: 56, Height: 40);
+                    Text: "+";
+                    Style: $C.@DefaultTextButtonStyle;
+                  }
+                  Group #DamagePlusOff {
+                    Visible: false;
+                    Anchor: (Width: 56, Height: 40);
+                    Background: #24214d(0.9);
+                    Label #DamagePlusOffText {
+                      Text: "+";
+                      Style: (FontSize: 16, TextColor: #5f5a80, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+                      Anchor: (Width: 56, Height: 40);
+                    }
+                  }
+                }
+              }
+            }
+          }
+            Group { Anchor: (Width: 14, Height: 92); }
+
+          Group #DefenseCard {
+            LayoutMode: Left;
+            Anchor: (Width: 259, Height: 92);
+            Background: #1b1842(0.97);
+
+            Group #DefenseAccent {
+              Anchor: (Width: 5, Height: 92);
+              Background: #4fd1a1;
+            }
+
+            Group #DefenseBody {
+              LayoutMode: Left;
+              Anchor: (Width: 254, Height: 92);
+
+              Group #DefenseText {
+                LayoutMode: Top;
+                Anchor: (Width: 128, Height: 92);
+                Padding: (Left: 12, Right: 4, Top: 6, Bottom: 4);
+
+                Label #DefenseLabel {
+                  Text: "Defense";
+                  Style: (FontSize: 13, TextColor: #4fd1a1, RenderBold: true, RenderUppercase: true, VerticalAlignment: Center);
+                  Anchor: (Width: 112, Height: 22);
+                }
+                Label #DefenseValue {
+                  Text: "0";
+                  Style: (FontSize: 22, TextColor: #ffffff, RenderBold: true, VerticalAlignment: Center);
+                  Anchor: (Width: 112, Height: 34);
+                }
+                Label #DefenseDelta {
+                  Text: "";
+                  Style: (FontSize: 12, TextColor: #ffd166, RenderBold: true, VerticalAlignment: Center);
+                  Anchor: (Width: 112, Height: 20);
+                }
+              }
+
+              Group #DefenseControls {
+                LayoutMode: Top;
+                Anchor: (Width: 126, Height: 92);
+
+                Group { Anchor: (Width: 126, Height: 26); }
+
+                Group #DefenseButtons {
+                  LayoutMode: Left;
+                  Anchor: (Width: 126, Height: 40);
+
+                  TextButton #DefenseMinusBtn {
+                    Anchor: (Width: 56, Height: 40);
+                    Text: "-";
+                    Style: $C.@DefaultTextButtonStyle;
+                  }
+                  Group #DefenseMinusOff {
+                    Visible: false;
+                    Anchor: (Width: 56, Height: 40);
+                    Background: #24214d(0.9);
+                    Label #DefenseMinusOffText {
+                      Text: "-";
+                      Style: (FontSize: 16, TextColor: #5f5a80, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+                      Anchor: (Width: 56, Height: 40);
+                    }
+                  }
+                  Group #DefenseButtonGap {
+                    Anchor: (Width: 8, Height: 40);
+                  }
+                  TextButton #DefenseBtn {
+                    Anchor: (Width: 56, Height: 40);
+                    Text: "+";
+                    Style: $C.@DefaultTextButtonStyle;
+                  }
+                  Group #DefensePlusOff {
+                    Visible: false;
+                    Anchor: (Width: 56, Height: 40);
+                    Background: #24214d(0.9);
+                    Label #DefensePlusOffText {
+                      Text: "+";
+                      Style: (FontSize: 16, TextColor: #5f5a80, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+                      Anchor: (Width: 56, Height: 40);
+                    }
+                  }
+                }
+              }
+            }
+          }
+          }
+          Group { Anchor: (Width: 10, Height: 8); }
+          Group {
+            LayoutMode: Left;
+            Anchor: (Width: 532, Height: 92);
+
+          Group #StaminaCard {
+            LayoutMode: Left;
+            Anchor: (Width: 259, Height: 92);
+            Background: #1b1842(0.97);
+
+            Group #StaminaAccent {
+              Anchor: (Width: 5, Height: 92);
+              Background: #9be564;
+            }
+
+            Group #StaminaBody {
+              LayoutMode: Left;
+              Anchor: (Width: 254, Height: 92);
+
+              Group #StaminaText {
+                LayoutMode: Top;
+                Anchor: (Width: 128, Height: 92);
+                Padding: (Left: 12, Right: 4, Top: 6, Bottom: 4);
+
+                Label #StaminaLabel {
+                  Text: "Stamina";
+                  Style: (FontSize: 13, TextColor: #9be564, RenderBold: true, RenderUppercase: true, VerticalAlignment: Center);
+                  Anchor: (Width: 112, Height: 22);
+                }
+                Label #StaminaValue {
+                  Text: "0";
+                  Style: (FontSize: 22, TextColor: #ffffff, RenderBold: true, VerticalAlignment: Center);
+                  Anchor: (Width: 112, Height: 34);
+                }
+                Label #StaminaDelta {
+                  Text: "";
+                  Style: (FontSize: 12, TextColor: #ffd166, RenderBold: true, VerticalAlignment: Center);
+                  Anchor: (Width: 112, Height: 20);
+                }
+              }
+
+              Group #StaminaControls {
+                LayoutMode: Top;
+                Anchor: (Width: 126, Height: 92);
+
+                Group { Anchor: (Width: 126, Height: 26); }
+
+                Group #StaminaButtons {
+                  LayoutMode: Left;
+                  Anchor: (Width: 126, Height: 40);
+
+                  TextButton #StaminaMinusBtn {
+                    Anchor: (Width: 56, Height: 40);
+                    Text: "-";
+                    Style: $C.@DefaultTextButtonStyle;
+                  }
+                  Group #StaminaMinusOff {
+                    Visible: false;
+                    Anchor: (Width: 56, Height: 40);
+                    Background: #24214d(0.9);
+                    Label #StaminaMinusOffText {
+                      Text: "-";
+                      Style: (FontSize: 16, TextColor: #5f5a80, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+                      Anchor: (Width: 56, Height: 40);
+                    }
+                  }
+                  Group #StaminaButtonGap {
+                    Anchor: (Width: 8, Height: 40);
+                  }
+                  TextButton #StaminaBtn {
+                    Anchor: (Width: 56, Height: 40);
+                    Text: "+";
+                    Style: $C.@DefaultTextButtonStyle;
+                  }
+                  Group #StaminaPlusOff {
+                    Visible: false;
+                    Anchor: (Width: 56, Height: 40);
+                    Background: #24214d(0.9);
+                    Label #StaminaPlusOffText {
+                      Text: "+";
+                      Style: (FontSize: 16, TextColor: #5f5a80, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+                      Anchor: (Width: 56, Height: 40);
+                    }
+                  }
+                }
+              }
+            }
+          }
+            Group { Anchor: (Width: 14, Height: 92); }
+
+          Group #SpeedCard {
+            LayoutMode: Left;
+            Anchor: (Width: 259, Height: 92);
+            Background: #1b1842(0.97);
+
+            Group #SpeedAccent {
+              Anchor: (Width: 5, Height: 92);
+              Background: #c792ff;
+            }
+
+            Group #SpeedBody {
+              LayoutMode: Left;
+              Anchor: (Width: 254, Height: 92);
+
+              Group #SpeedText {
+                LayoutMode: Top;
+                Anchor: (Width: 128, Height: 92);
+                Padding: (Left: 12, Right: 4, Top: 6, Bottom: 4);
+
+                Label #SpeedLabel {
+                  Text: "Speed";
+                  Style: (FontSize: 13, TextColor: #c792ff, RenderBold: true, RenderUppercase: true, VerticalAlignment: Center);
+                  Anchor: (Width: 112, Height: 22);
+                }
+                Label #SpeedValue {
+                  Text: "0";
+                  Style: (FontSize: 22, TextColor: #ffffff, RenderBold: true, VerticalAlignment: Center);
+                  Anchor: (Width: 112, Height: 34);
+                }
+                Label #SpeedDelta {
+                  Text: "";
+                  Style: (FontSize: 12, TextColor: #ffd166, RenderBold: true, VerticalAlignment: Center);
+                  Anchor: (Width: 112, Height: 20);
+                }
+              }
+
+              Group #SpeedControls {
+                LayoutMode: Top;
+                Anchor: (Width: 126, Height: 92);
+
+                Group { Anchor: (Width: 126, Height: 26); }
+
+                Group #SpeedButtons {
+                  LayoutMode: Left;
+                  Anchor: (Width: 126, Height: 40);
+
+                  TextButton #SpeedMinusBtn {
+                    Anchor: (Width: 56, Height: 40);
+                    Text: "-";
+                    Style: $C.@DefaultTextButtonStyle;
+                  }
+                  Group #SpeedMinusOff {
+                    Visible: false;
+                    Anchor: (Width: 56, Height: 40);
+                    Background: #24214d(0.9);
+                    Label #SpeedMinusOffText {
+                      Text: "-";
+                      Style: (FontSize: 16, TextColor: #5f5a80, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+                      Anchor: (Width: 56, Height: 40);
+                    }
+                  }
+                  Group #SpeedButtonGap {
+                    Anchor: (Width: 8, Height: 40);
+                  }
+                  TextButton #SpeedBtn {
+                    Anchor: (Width: 56, Height: 40);
+                    Text: "+";
+                    Style: $C.@DefaultTextButtonStyle;
+                  }
+                  Group #SpeedPlusOff {
+                    Visible: false;
+                    Anchor: (Width: 56, Height: 40);
+                    Background: #24214d(0.9);
+                    Label #SpeedPlusOffText {
+                      Text: "+";
+                      Style: (FontSize: 16, TextColor: #5f5a80, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+                      Anchor: (Width: 56, Height: 40);
+                    }
+                  }
+                }
+              }
+            }
+          }
+          }
+          }
+
+          Group { Anchor: (Width: 10, Height: 10); }
+
+          Group #PrestigePanel {
+            LayoutMode: Top;
+            Anchor: (Width: 560, Height: 215);
+            Background: #0f0d24(0.95);
+            Padding: (Left: 14, Right: 14, Top: 12, Bottom: 12);
+
+          Label #PrestigeHeading {
+            Text: "Prestigio - Bonos permanentes";
+            Style: (FontSize: 14, TextColor: #f5c26b, RenderBold: true, RenderUppercase: true, VerticalAlignment: Center);
+            Anchor: (Width: 532, Height: 26);
+          }
+          Group { Anchor: (Width: 532, Height: 1); Background: #8a6d2f(0.95); }
+          Group { Anchor: (Width: 10, Height: 8); }
+          Group {
+            LayoutMode: Left;
+            Anchor: (Width: 532, Height: 46);
+
+            Group #PrestigeHealthCell {
+              LayoutMode: Left;
+              Anchor: (Width: 168, Height: 46);
+              Background: #1b1842(0.97);
+
+              Group { Anchor: (Width: 4, Height: 46); Background: #ff6b6b; }
+              Group #PrestigeHealthBody {
+                LayoutMode: Top;
+                Anchor: (Width: 164, Height: 46);
+                Padding: (Left: 10, Right: 4, Top: 3, Bottom: 3);
+
+                Label #PrestigeHealthBonusLabel {
+                  Text: "Vida";
+                  Style: (FontSize: 11, TextColor: #b9b0dd, RenderBold: true, RenderUppercase: true, VerticalAlignment: Center);
+                  Anchor: (Width: 148, Height: 16);
+                }
+                Label #PrestigeHealthBonus {
+                  Text: "--";
+                  Style: (FontSize: 18, TextColor: #ffffff, RenderBold: true, VerticalAlignment: Center);
+                  Anchor: (Width: 148, Height: 24);
+                }
+              }
+            }
+            Group { Anchor: (Width: 14, Height: 46); }
+            Group #PrestigeManaCell {
+              LayoutMode: Left;
+              Anchor: (Width: 168, Height: 46);
+              Background: #1b1842(0.97);
+
+              Group { Anchor: (Width: 4, Height: 46); Background: #5aa9ff; }
+              Group #PrestigeManaBody {
+                LayoutMode: Top;
+                Anchor: (Width: 164, Height: 46);
+                Padding: (Left: 10, Right: 4, Top: 3, Bottom: 3);
+
+                Label #PrestigeManaBonusLabel {
+                  Text: "Mana";
+                  Style: (FontSize: 11, TextColor: #b9b0dd, RenderBold: true, RenderUppercase: true, VerticalAlignment: Center);
+                  Anchor: (Width: 148, Height: 16);
+                }
+                Label #PrestigeManaBonus {
+                  Text: "--";
+                  Style: (FontSize: 18, TextColor: #ffffff, RenderBold: true, VerticalAlignment: Center);
+                  Anchor: (Width: 148, Height: 24);
+                }
+              }
+            }
+            Group { Anchor: (Width: 14, Height: 46); }
+            Group #PrestigeDamageCell {
+              LayoutMode: Left;
+              Anchor: (Width: 168, Height: 46);
+              Background: #1b1842(0.97);
+
+              Group { Anchor: (Width: 4, Height: 46); Background: #ffb454; }
+              Group #PrestigeDamageBody {
+                LayoutMode: Top;
+                Anchor: (Width: 164, Height: 46);
+                Padding: (Left: 10, Right: 4, Top: 3, Bottom: 3);
+
+                Label #PrestigeDamageBonusLabel {
+                  Text: "Dano";
+                  Style: (FontSize: 11, TextColor: #b9b0dd, RenderBold: true, RenderUppercase: true, VerticalAlignment: Center);
+                  Anchor: (Width: 148, Height: 16);
+                }
+                Label #PrestigeDamageBonus {
+                  Text: "--";
+                  Style: (FontSize: 18, TextColor: #ffffff, RenderBold: true, VerticalAlignment: Center);
+                  Anchor: (Width: 148, Height: 24);
+                }
+              }
+            }
+          }
+          Group { Anchor: (Width: 10, Height: 8); }
+          Group {
+            LayoutMode: Left;
+            Anchor: (Width: 532, Height: 46);
+
+            Group #PrestigeDefenseCell {
+              LayoutMode: Left;
+              Anchor: (Width: 168, Height: 46);
+              Background: #1b1842(0.97);
+
+              Group { Anchor: (Width: 4, Height: 46); Background: #4fd1a1; }
+              Group #PrestigeDefenseBody {
+                LayoutMode: Top;
+                Anchor: (Width: 164, Height: 46);
+                Padding: (Left: 10, Right: 4, Top: 3, Bottom: 3);
+
+                Label #PrestigeDefenseBonusLabel {
+                  Text: "Defensa";
+                  Style: (FontSize: 11, TextColor: #b9b0dd, RenderBold: true, RenderUppercase: true, VerticalAlignment: Center);
+                  Anchor: (Width: 148, Height: 16);
+                }
+                Label #PrestigeDefenseBonus {
+                  Text: "--";
+                  Style: (FontSize: 18, TextColor: #ffffff, RenderBold: true, VerticalAlignment: Center);
+                  Anchor: (Width: 148, Height: 24);
+                }
+              }
+            }
+            Group { Anchor: (Width: 14, Height: 46); }
+            Group #PrestigeStaminaCell {
+              LayoutMode: Left;
+              Anchor: (Width: 168, Height: 46);
+              Background: #1b1842(0.97);
+
+              Group { Anchor: (Width: 4, Height: 46); Background: #9be564; }
+              Group #PrestigeStaminaBody {
+                LayoutMode: Top;
+                Anchor: (Width: 164, Height: 46);
+                Padding: (Left: 10, Right: 4, Top: 3, Bottom: 3);
+
+                Label #PrestigeStaminaBonusLabel {
+                  Text: "Vigor";
+                  Style: (FontSize: 11, TextColor: #b9b0dd, RenderBold: true, RenderUppercase: true, VerticalAlignment: Center);
+                  Anchor: (Width: 148, Height: 16);
+                }
+                Label #PrestigeStaminaBonus {
+                  Text: "--";
+                  Style: (FontSize: 18, TextColor: #ffffff, RenderBold: true, VerticalAlignment: Center);
+                  Anchor: (Width: 148, Height: 24);
+                }
+              }
+            }
+            Group { Anchor: (Width: 14, Height: 46); }
+            Group #PrestigeSpeedCell {
+              LayoutMode: Left;
+              Anchor: (Width: 168, Height: 46);
+              Background: #1b1842(0.97);
+
+              Group { Anchor: (Width: 4, Height: 46); Background: #c792ff; }
+              Group #PrestigeSpeedBody {
+                LayoutMode: Top;
+                Anchor: (Width: 164, Height: 46);
+                Padding: (Left: 10, Right: 4, Top: 3, Bottom: 3);
+
+                Label #PrestigeSpeedBonusLabel {
+                  Text: "Velocidad";
+                  Style: (FontSize: 11, TextColor: #b9b0dd, RenderBold: true, RenderUppercase: true, VerticalAlignment: Center);
+                  Anchor: (Width: 148, Height: 16);
+                }
+                Label #PrestigeSpeedBonus {
+                  Text: "--";
+                  Style: (FontSize: 18, TextColor: #ffffff, RenderBold: true, VerticalAlignment: Center);
+                  Anchor: (Width: 148, Height: 24);
+                }
+              }
+            }
+          }
+          Group { Anchor: (Width: 10, Height: 8); }
+          Label #PrestigeNote {
+            Text: "Al llegar al nivel requerido (20, 30, 40...) usa /rpgprestigio: vuelves a nivel 1, conservas tu clase y reinicias tus puntos. Cada Prestigio otorga un bono permanente del 5% de tu progresion.";
+            Style: (FontSize: 11, TextColor: #b9b0dd, Wrap: true);
+            Anchor: (Width: 532, Height: 44);
+          }
+          }
+        }
+      }
+
+      // Textos decorativos del Java: ids conservados, ocultos y sin ocupar espacio.
+      Label #DividerTop {
+        Visible: false;
+        Text: "";
+        Style: (FontSize: 11, TextColor: #8f7ae0, HorizontalAlignment: Center);
+        Anchor: (Width: 872, Height: 1);
+      }
+
+      Group { Anchor: (Width: 872, Height: 10); }
+
+      // ================= Barra inferior: ayuda + acciones =================
+      Group #ActionsRow {
+        LayoutMode: Left;
+        Anchor: (Width: 872, Height: 44);
+
+        Label #FooterHint {
+          Text: "";
+          Style: (FontSize: 11, TextColor: #b9b0dd, Wrap: true, VerticalAlignment: Center);
+          Anchor: (Width: 496, Height: 44);
+        }
+
+        TextButton #CancelBtn {
+          Anchor: (Width: 180, Height: 42);
+          Text: "Cancelar";
+          Style: $C.@DefaultTextButtonStyle;
+        }
+        Group #CancelOff {
+          Visible: false;
+          Anchor: (Width: 180, Height: 42);
+          Background: #24214d(0.9);
+          Label #CancelOffText {
+            Text: "Cancelar";
+            Style: (FontSize: 14, TextColor: #5f5a80, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+            Anchor: (Width: 180, Height: 42);
+          }
+        }
+
+        Group #ActionsGap {
+          Anchor: (Width: 12, Height: 42);
+        }
+
+        TextButton #ConfirmBtn {
+          Anchor: (Width: 180, Height: 42);
+          Text: "Confirmar";
+          Style: $C.@DefaultTextButtonStyle;
+        }
+        Group #ConfirmOff {
+          Visible: false;
+          Anchor: (Width: 180, Height: 42);
+          Background: #24214d(0.9);
+          Label #ConfirmOffText {
+            Text: "Confirmar";
+            Style: (FontSize: 14, TextColor: #5f5a80, RenderBold: true, HorizontalAlignment: Center, VerticalAlignment: Center);
+            Anchor: (Width: 180, Height: 42);
+          }
+        }
+      }
+
+      Label #DividerBottom {
+        Visible: false;
+        Text: "";
+        Style: (FontSize: 11, TextColor: #8f7ae0, HorizontalAlignment: Center);
+        Anchor: (Width: 872, Height: 1);
+      }
+    }
+  }
+}
+
+$C.@BackButton {}
